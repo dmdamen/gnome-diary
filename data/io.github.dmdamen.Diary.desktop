@@ -2,7 +2,7 @@
 Name=Diary
 Comment=Write your diary, encrypted and in sync
 Exec=diary
-Icon=io.github.diary.Diary
+Icon=io.github.dmdamen.Diary
 Terminal=false
 Type=Application
 Categories=GNOME;GTK;Office;

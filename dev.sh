@@ -18,7 +18,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 IMAGE=${IMAGE:-localhost/gnome-diary-dev}
-APP_ID=io.github.diary.Diary
+APP_ID=io.github.dmdamen.Diary
 COVERAGE_MIN=${COVERAGE_MIN:-95}
 
 # in_container [podman options --] command...

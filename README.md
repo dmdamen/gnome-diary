@@ -94,6 +94,3 @@ The code has three layers:
 
 New behaviour is written test-first. The coverage report is in
 `target/llvm-cov/html/index.html`.
-
-The app ID `io.github.diary.Diary` is a placeholder. Change it in
-`crates/diary/src/lib.rs`, `data/` and `build-aux/` before publishing.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.diary.Diary</id>
+  <id>io.github.dmdamen.Diary</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Diary</name>
@@ -18,7 +18,8 @@
       <li>Keeps both versions when two computers edit the same day</li>
     </ul>
   </description>
-  <launchable type="desktop-id">io.github.diary.Diary.desktop</launchable>
+  <url type="homepage">https://github.com/dmdamen/gnome-diary</url>
+  <launchable type="desktop-id">io.github.dmdamen.Diary.desktop</launchable>
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="0.1.0" date="2026-11-10"/>

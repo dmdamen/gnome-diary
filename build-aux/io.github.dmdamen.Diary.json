@@ -1,5 +1,5 @@
 {
-  "id": "io.github.diary.Diary",
+  "id": "io.github.dmdamen.Diary",
   "runtime": "org.gnome.Platform",
   "runtime-version": "50",
   "sdk": "org.gnome.Sdk",
@@ -24,9 +24,9 @@
         "mkdir -p .cargo && cp build-aux/cargo-offline.toml .cargo/config.toml",
         "cargo build --release --offline --locked -p diary",
         "install -Dm755 target/release/diary /app/bin/diary",
-        "install -Dm644 data/io.github.diary.Diary.desktop /app/share/applications/io.github.diary.Diary.desktop",
-        "install -Dm644 data/io.github.diary.Diary.metainfo.xml /app/share/metainfo/io.github.diary.Diary.metainfo.xml",
-        "install -Dm644 data/icons/io.github.diary.Diary.svg /app/share/icons/hicolor/scalable/apps/io.github.diary.Diary.svg"
+        "install -Dm644 data/io.github.dmdamen.Diary.desktop /app/share/applications/io.github.dmdamen.Diary.desktop",
+        "install -Dm644 data/io.github.dmdamen.Diary.metainfo.xml /app/share/metainfo/io.github.dmdamen.Diary.metainfo.xml",
+        "install -Dm644 data/icons/io.github.dmdamen.Diary.svg /app/share/icons/hicolor/scalable/apps/io.github.dmdamen.Diary.svg"
       ],
       "sources": [
         {

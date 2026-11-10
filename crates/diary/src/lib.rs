@@ -9,4 +9,4 @@ pub mod search_page;
 pub mod setup_page;
 pub mod window;
 
-pub const APP_ID: &str = "io.github.diary.Diary";
+pub const APP_ID: &str = "io.github.dmdamen.Diary";
