@@ -299,6 +299,42 @@ fn view_follows_the_cursor_while_typing() {
     wait_until("scroll to cursor", || scroller.vadjustment().value() > 0.0);
 }
 
+fn a_free_line_stays_below_the_cursor() {
+    let env = Env::new();
+    env.existing_diary(&[]);
+    let w = env.window();
+    unlock(&env, &w);
+    let view = w.editor_page().text.clone();
+    wait_until("layout", || view.height() > 0);
+    for _ in 0..40 {
+        // What a keystroke does: insert, then GTK scrolls the cursor just
+        // into view (with no margin). A person types slower than a frame.
+        view.emit_insert_at_cursor("another line of text\n");
+        view.scroll_mark_onscreen(&view.buffer().get_insert());
+        let until = Instant::now() + Duration::from_millis(20);
+        while Instant::now() < until {
+            gtk::glib::MainContext::default().iteration(false);
+        }
+    }
+    wait_until("text laid out", || {
+        view.vadjustment()
+            .is_some_and(|a| a.upper() > 2.0 * a.page_size() && a.value() > 0.0)
+    });
+    let free_below = || {
+        let cursor = view.iter_location(&view.buffer().iter_at_mark(&view.buffer().get_insert()));
+        let (_, bottom) = view.buffer_to_window_coords(
+            gtk::TextWindowType::Widget,
+            0,
+            cursor.y() + cursor.height(),
+        );
+        (view.height() - bottom, cursor.height())
+    };
+    wait_until("a free line below the cursor", || {
+        let (free, line) = free_below();
+        line > 0 && free >= line
+    });
+}
+
 fn closing_the_window_saves() {
     let env = Env::new();
     env.existing_diary(&[]);
@@ -663,6 +699,10 @@ fn main() {
         (
             "view_follows_the_cursor_while_typing",
             view_follows_the_cursor_while_typing,
+        ),
+        (
+            "a_free_line_stays_below_the_cursor",
+            a_free_line_stays_below_the_cursor,
         ),
         ("closing_the_window_saves", closing_the_window_saves),
         (

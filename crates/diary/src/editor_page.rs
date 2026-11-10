@@ -127,6 +127,29 @@ impl EditorPage {
             placeholder,
             last_pointer: Rc::new(Cell::new((f64::NAN, f64::NAN))),
         };
+        let view = page.text.downgrade();
+        // GTK scrolls the cursor just into view after each keystroke; run
+        // afterwards (on idle) so the free line wins.
+        // Typing moves the cursor without a mark-set signal, so watch text
+        // changes as well as explicit cursor moves (arrows, clicks).
+        let later = move || {
+            let view = view.clone();
+            gtk::glib::idle_add_local_once(move || {
+                if let Some(view) = view.upgrade() {
+                    keep_free_line_around_cursor(&view);
+                }
+            });
+        };
+        let buffer = page.text.buffer();
+        buffer.connect_changed({
+            let later = later.clone();
+            move |_| later()
+        });
+        buffer.connect_mark_set(move |buffer, _, mark| {
+            if *mark == buffer.get_insert() {
+                later();
+            }
+        });
         let toolbar = page.toolbar.clone();
         let last = page.last_pointer.clone();
         motion.connect_motion(move |_, x, y| {
@@ -170,4 +193,21 @@ fn icon_button(icon: &str, tooltip: &str, action: &str) -> gtk::Button {
         .tooltip_text(tooltip)
         .action_name(action)
         .build()
+}
+
+/// Scrolls so the cursor stays at least one line away from the top and
+/// bottom edges, instead of writing on the very last visible line.
+fn keep_free_line_around_cursor(view: &gtk::TextView) {
+    let page = view.vadjustment().map_or(0.0, |a| a.page_size());
+    if page <= 0.0 {
+        return;
+    }
+    let buffer = view.buffer();
+    let line = f64::from(
+        view.iter_location(&buffer.iter_at_mark(&buffer.get_insert()))
+            .height(),
+    );
+    // GTK expresses the margin as a fraction of the visible height.
+    let margin = (line / page).clamp(0.0, 0.45);
+    view.scroll_to_mark(&buffer.get_insert(), margin, false, 0.0, 0.0);
 }
