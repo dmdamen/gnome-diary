@@ -274,6 +274,31 @@ fn header_hides_while_typing() {
     assert!(editor.toolbar.reveals_top_bars());
 }
 
+fn view_follows_the_cursor_while_typing() {
+    let env = Env::new();
+    env.existing_diary(&[]);
+    let w = env.window();
+    unlock(&env, &w);
+    let view = w.editor_page().text.clone();
+    view.grab_focus();
+    // Type (not paste) far past the bottom of the window.
+    for _ in 0..80 {
+        view.emit_insert_at_cursor("another line of text\n");
+    }
+    // The text view must own the scrolling (inside a plain container it has
+    // no adjustment and the view never follows the cursor) …
+    wait_until("layout", || {
+        view.vadjustment()
+            .is_some_and(|a| a.upper() > a.page_size())
+    });
+    // … so that GTK's "keep the cursor visible" step, run on every
+    // keystroke, scrolls it. (Headless windows get no keyboard focus, so
+    // that step is triggered directly here.)
+    view.scroll_mark_onscreen(&view.buffer().get_insert());
+    let scroller = w.editor_page().scroller.clone();
+    wait_until("scroll to cursor", || scroller.vadjustment().value() > 0.0);
+}
+
 fn closing_the_window_saves() {
     let env = Env::new();
     env.existing_diary(&[]);
@@ -635,6 +660,10 @@ fn main() {
             typing_is_saved_after_a_pause,
         ),
         ("header_hides_while_typing", header_hides_while_typing),
+        (
+            "view_follows_the_cursor_while_typing",
+            view_follows_the_cursor_while_typing,
+        ),
         ("closing_the_window_saves", closing_the_window_saves),
         (
             "previous_and_next_move_between_entries",

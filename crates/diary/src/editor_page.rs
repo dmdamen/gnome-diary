@@ -7,6 +7,9 @@ use std::rc::Rc;
 use adw::prelude::*;
 use gtk::gio;
 
+const TEXT_WIDTH: i32 = 720;
+const TEXT_TIGHTENING: i32 = 560;
+
 pub struct EditorPage {
     pub root: adw::ToolbarView,
     pub toolbar: adw::ToolbarView,
@@ -15,6 +18,7 @@ pub struct EditorPage {
     pub next: gtk::Button,
     pub calendar_button: gtk::MenuButton,
     pub calendar: gtk::Calendar,
+    pub scroller: gtk::ScrolledWindow,
     pub text: gtk::TextView,
     pub placeholder: gtk::Label,
     last_pointer: Rc<Cell<(f64, f64)>>,
@@ -76,24 +80,36 @@ impl EditorPage {
             .can_target(false)
             .css_classes(["diary-placeholder"])
             .build();
-        let overlay = gtk::Overlay::builder().child(&text).build();
-        overlay.add_overlay(&placeholder);
-        let clamp = adw::Clamp::builder()
-            .maximum_size(720)
-            .tightening_threshold(560)
-            .child(&overlay)
-            .build();
+        // ClampScrollable hands the scroll position to the text view itself,
+        // so the view follows the cursor while typing.
         let scroller = gtk::ScrolledWindow::builder()
             .hscrollbar_policy(gtk::PolicyType::Never)
-            .child(&clamp)
+            .child(
+                &adw::ClampScrollable::builder()
+                    .maximum_size(TEXT_WIDTH)
+                    .tightening_threshold(TEXT_TIGHTENING)
+                    .child(&text)
+                    .build(),
+            )
             .build();
+        // The placeholder floats above, clamped the same way so it lines up.
+        let overlay = gtk::Overlay::builder().child(&scroller).build();
+        overlay.add_overlay(
+            &adw::Clamp::builder()
+                .maximum_size(TEXT_WIDTH)
+                .tightening_threshold(TEXT_TIGHTENING)
+                .valign(gtk::Align::Start)
+                .can_target(false)
+                .child(&placeholder)
+                .build(),
+        );
 
         let toolbar = adw::ToolbarView::builder()
             .top_bar_style(adw::ToolbarStyle::Flat)
             .extend_content_to_top_edge(true)
             .build();
         toolbar.add_top_bar(&header);
-        toolbar.set_content(Some(&scroller));
+        toolbar.set_content(Some(&overlay));
 
         let motion = gtk::EventControllerMotion::new();
         toolbar.add_controller(motion.clone());
@@ -106,6 +122,7 @@ impl EditorPage {
             next,
             calendar_button,
             calendar,
+            scroller,
             text,
             placeholder,
             last_pointer: Rc::new(Cell::new((f64::NAN, f64::NAN))),

@@ -89,8 +89,9 @@ fn main() {
     shoot(&w, "3-unlock");
     w.password_page().submit.emit_clicked();
     wait(|| w.visible_page() == "editor");
+    shoot(&w, "4-editor-empty");
     w.editor_page().text.buffer().set_text(SAMPLE);
     w.editor_page().pointer_moved(1.0, 1.0);
     wait(|| false);
-    shoot(&w, "4-editor");
+    shoot(&w, "5-editor");
 }
