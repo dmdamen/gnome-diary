@@ -17,3 +17,7 @@ thiserror = "2"
 tempfile = "3"
 gtk = { package = "gtk4", version = "0.10", features = ["v4_12"] }
 adw = { package = "libadwaita", version = "0.8", features = ["v1_5"] }
+
+# scrypt and the ciphers are painfully slow unoptimised; keep debug builds usable.
+[profile.dev.package."*"]
+opt-level = 3

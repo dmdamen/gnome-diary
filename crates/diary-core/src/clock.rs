@@ -36,6 +36,13 @@ impl ManualClock {
     }
 }
 
+/// Lets the app and its tests share one clock.
+impl<T: Clock + ?Sized> Clock for std::rc::Rc<T> {
+    fn now(&self) -> DateTime<FixedOffset> {
+        (**self).now()
+    }
+}
+
 fn parse(rfc3339: &str) -> DateTime<FixedOffset> {
     DateTime::parse_from_rfc3339(rfc3339).expect("invalid time")
 }
@@ -69,6 +76,14 @@ mod tests {
         assert_eq!(clock.now().to_rfc3339(), "2026-11-10T20:56:00+01:00");
         clock.set("2027-01-01T00:00:00+00:00");
         assert_eq!(clock.now().to_rfc3339(), "2027-01-01T00:00:00+00:00");
+    }
+
+    #[test]
+    fn shared_clocks_tell_the_same_time() {
+        let clock = std::rc::Rc::new(ManualClock::new("2026-11-10T20:55:03+01:00"));
+        let shared: Box<dyn Clock> = Box::new(clock.clone());
+        clock.advance(chrono::Duration::hours(1));
+        assert_eq!(shared.now().to_rfc3339(), "2026-11-10T21:55:03+01:00");
     }
 
     #[test]
