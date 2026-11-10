@@ -1,0 +1,13 @@
+/* Let the page be the page: no boxes around the text. */
+textview.diary-text,
+textview.diary-text > text {
+  background-color: transparent;
+}
+
+textview.diary-text {
+  line-height: 1.5;
+}
+
+.diary-placeholder {
+  opacity: 0.4;
+}
