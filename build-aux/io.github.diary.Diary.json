@@ -1,0 +1,40 @@
+{
+  "id": "io.github.diary.Diary",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "50",
+  "sdk": "org.gnome.Sdk",
+  "sdk-extensions": ["org.freedesktop.Sdk.Extension.rust-stable"],
+  "command": "diary",
+  "finish-args": [
+    "--share=ipc",
+    "--socket=wayland",
+    "--socket=fallback-x11",
+    "--device=dri",
+    "--filesystem=home"
+  ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/rust-stable/bin",
+    "env": { "CARGO_HOME": "/run/build/diary/cargo" }
+  },
+  "modules": [
+    {
+      "name": "diary",
+      "buildsystem": "simple",
+      "build-commands": [
+        "mkdir -p .cargo && cp build-aux/cargo-offline.toml .cargo/config.toml",
+        "cargo build --release --offline --locked -p diary",
+        "install -Dm755 target/release/diary /app/bin/diary",
+        "install -Dm644 data/io.github.diary.Diary.desktop /app/share/applications/io.github.diary.Diary.desktop",
+        "install -Dm644 data/io.github.diary.Diary.metainfo.xml /app/share/metainfo/io.github.diary.Diary.metainfo.xml",
+        "install -Dm644 data/icons/io.github.diary.Diary.svg /app/share/icons/hicolor/scalable/apps/io.github.diary.Diary.svg"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "..",
+          "skip": ["target", "build", ".flatpak-builder", ".git"]
+        }
+      ]
+    }
+  ]
+}

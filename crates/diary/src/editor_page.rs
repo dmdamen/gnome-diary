@@ -58,12 +58,11 @@ impl EditorPage {
 
         let text = gtk::TextView::builder()
             .wrap_mode(gtk::WrapMode::WordChar)
-            .top_margin(36)
+            .top_margin(72)
             .bottom_margin(120)
             .left_margin(24)
             .right_margin(24)
-            .pixels_below_lines(8)
-            .pixels_inside_wrap(4)
+            .pixels_below_lines(6)
             .css_classes(["diary-text"])
             .vexpand(true)
             .build();
@@ -72,7 +71,7 @@ impl EditorPage {
             .label("Write about your day…")
             .halign(gtk::Align::Start)
             .valign(gtk::Align::Start)
-            .margin_top(36)
+            .margin_top(72)
             .margin_start(24)
             .can_target(false)
             .css_classes(["diary-placeholder"])

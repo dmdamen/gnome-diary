@@ -1,0 +1,6 @@
+# Used inside the Flatpak build: crates come from ./vendor (made by `./dev.sh flatpak`).
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"

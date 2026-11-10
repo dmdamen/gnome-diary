@@ -329,7 +329,7 @@ impl DiaryWindow {
                 self.inner
                     .prefs
                     .folder
-                    .set_subtitle(&session.diary().root().display().to_string());
+                    .set_subtitle(&display_path(session.diary().root()));
                 *self.inner.session.borrow_mut() = Some(session);
                 self.set_unlocked(true);
                 self.refresh_editor();
@@ -763,5 +763,13 @@ fn problem_text(error: &StoreError) -> String {
         }
         StoreError::Io(e) => format!("Could not use this folder: {e}"),
         other => other.to_string(),
+    }
+}
+
+/// A folder as the user thinks of it: `~/Nextcloud/Diary`.
+pub fn display_path(path: &Path) -> String {
+    match path.strip_prefix(glib::home_dir()) {
+        Ok(rest) => format!("~/{}", rest.display()),
+        Err(_) => path.display().to_string(),
     }
 }

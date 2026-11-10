@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="cover" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d6db4"/>
+      <stop offset="1" stop-color="#2a4f8a"/>
+    </linearGradient>
+  </defs>
+  <!-- pages -->
+  <rect x="26" y="18" width="80" height="96" rx="8" fill="#deddda"/>
+  <rect x="24" y="14" width="80" height="96" rx="8" fill="#f6f5f4"/>
+  <!-- cover -->
+  <rect x="20" y="10" width="80" height="96" rx="8" fill="url(#cover)"/>
+  <rect x="20" y="10" width="14" height="96" rx="6" fill="#1c3a69" opacity="0.55"/>
+  <!-- label -->
+  <rect x="46" y="32" width="42" height="20" rx="4" fill="#f6f5f4"/>
+  <rect x="52" y="39" width="30" height="2.5" rx="1.25" fill="#9a9996"/>
+  <rect x="52" y="44" width="20" height="2.5" rx="1.25" fill="#9a9996"/>
+  <!-- ribbon -->
+  <path d="M76 106 v14 l6 -5 l6 5 v-14 z" fill="#e01b24"/>
+  <!-- lock -->
+  <rect x="56" y="70" width="22" height="18" rx="3" fill="#f6c342"/>
+  <path d="M60 70 v-5 a7 7 0 0 1 14 0 v5" fill="none" stroke="#f6c342" stroke-width="4"/>
+  <circle cx="67" cy="78" r="2.5" fill="#8a6a10"/>
+</svg>

@@ -8,6 +8,7 @@
 #   ./dev.sh quick [args] cargo test without coverage, for fast red/green loops
 #   ./dev.sh run          start the app on this Wayland session
 #                         (throwaway home in ~/.cache/gnome-diary-dev/home)
+#   ./dev.sh screenshots  render the main pages to target/screenshots/*.png (--dark)
 #   ./dev.sh cargo ...    any cargo command inside the container
 #   ./dev.sh shell        interactive shell in the container
 #   ./dev.sh flatpak      build build/diary.flatpak
@@ -54,6 +55,10 @@ case ${1:-} in
     shift
     in_container -- bash -euc "$HEADLESS cargo test --workspace \"\$@\"" bash "$@"
     ;;
+  screenshots)
+    shift
+    in_container -- bash -euc "$HEADLESS cargo run -q -p diary --example screenshots -- \"\$@\"" bash "$@"
+    ;;
   cargo)
     shift
     in_container -- cargo "$@"
@@ -71,7 +76,7 @@ case ${1:-} in
     ;;
   flatpak)
     mkdir -p build
-    in_container -- bash -euc 'rm -rf build/vendor && cargo vendor --locked build/vendor >build/cargo-vendor-config.toml'
+    in_container -- bash -euc 'rm -rf vendor && cargo vendor --locked -q vendor >/dev/null'
     podman run --rm --privileged -v "$PWD":/src:z -v gnome-diary-flatpak:/root/.local/share/flatpak -w /src \
       registry.fedoraproject.org/fedora:45 bash -euc "
         dnf -y -q install flatpak flatpak-builder >/dev/null
@@ -85,7 +90,7 @@ case ${1:-} in
     flatpak install --user -y build/diary.flatpak
     ;;
   *)
-    sed -n '2,15p' "$0"
+    sed -n '2,16p' "$0"
     exit 1
     ;;
 esac

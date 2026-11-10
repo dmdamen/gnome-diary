@@ -551,6 +551,18 @@ fn system_context_uses_user_config_dir() {
     let _ = ctx.clock.now();
 }
 
+fn paths_under_home_are_shortened() {
+    let home = gtk::glib::home_dir();
+    assert_eq!(
+        diary::window::display_path(&home.join("Sync/Diary")),
+        "~/Sync/Diary"
+    );
+    assert_eq!(
+        diary::window::display_path(std::path::Path::new("/mnt/x")),
+        "/mnt/x"
+    );
+}
+
 fn date_titles() {
     let d = |s: &str| s.parse::<chrono::NaiveDate>().unwrap();
     assert_eq!(
@@ -653,6 +665,10 @@ fn main() {
             system_context_uses_user_config_dir,
         ),
         ("date_titles", date_titles),
+        (
+            "paths_under_home_are_shortened",
+            paths_under_home_are_shortened,
+        ),
     ];
     let filter = std::env::args().nth(1).filter(|a| !a.starts_with('-'));
     let mut ran = 0;

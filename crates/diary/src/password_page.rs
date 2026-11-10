@@ -67,6 +67,7 @@ impl PasswordPage {
             .build();
         let status = adw::StatusPage::builder()
             .icon_name("system-lock-screen-symbolic")
+            .css_classes(["compact"])
             .child(&clamp)
             .build();
         PasswordPage {
@@ -90,7 +91,7 @@ impl PasswordPage {
     pub fn show(&self, mode: Mode, folder: &Path) {
         self.mode.set(mode);
         self.clear();
-        let place = folder.display();
+        let place = crate::window::display_path(folder);
         match mode {
             Mode::Create => {
                 self.status.set_title("Choose a Password");

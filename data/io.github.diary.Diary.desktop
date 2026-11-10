@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Diary
+Comment=Write your diary, encrypted and in sync
+Exec=diary
+Icon=io.github.diary.Diary
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Office;
+Keywords=journal;notes;writing;
+StartupNotify=true
+DBusActivatable=false
