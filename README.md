@@ -80,8 +80,8 @@ Everything runs in podman; nothing needs to be installed on your machine.
 ./dev.sh quick [args]  # cargo test without coverage (fast red/green loop)
 ./dev.sh run           # run the app on your desktop (throwaway home folder)
 ./dev.sh screenshots   # render the main pages to target/screenshots/
-./dev.sh flatpak       # build build/diary.flatpak
-./dev.sh install       # install it for your user
+./dev.sh install       # build and install natively in ~/.local
+./dev.sh flatpak       # optional: build build/diary.flatpak (install with ./dev.sh install-flatpak)
 ```
 
 The code has three layers:

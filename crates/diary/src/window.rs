@@ -175,6 +175,12 @@ impl DiaryWindow {
                 syncing: Cell::new(false),
             }),
         };
+        // Handlers only hold weak references, so the GTK window keeps this
+        // controller alive until the window is destroyed.
+        let keep = RefCell::new(Some(this.clone()));
+        this.inner.window.connect_destroy(move |_| {
+            keep.take();
+        });
         this.apply_font_size();
         this.add_actions();
         this.connect_signals();

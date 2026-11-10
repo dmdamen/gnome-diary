@@ -520,6 +520,17 @@ fn fullscreen_toggles() {
 
 // Application ----------------------------------------------------------
 
+fn window_keeps_working_without_a_handle() {
+    // The application drops its DiaryWindow right after creating it; the
+    // buttons must keep working as long as the GTK window lives.
+    let env = Env::new();
+    let window = env.window().window().clone();
+    settle();
+    gtk::gio::prelude::ActionGroupExt::activate_action(&window, "fullscreen", None);
+    wait_until("fullscreen", || window.is_fullscreen());
+    window.destroy();
+}
+
 fn application_opens_a_window() {
     let env = Env::new();
     let app = diary::application::build(Box::new({
@@ -659,6 +670,10 @@ fn main() {
             preferences_dialog_and_about_open,
         ),
         ("fullscreen_toggles", fullscreen_toggles),
+        (
+            "window_keeps_working_without_a_handle",
+            window_keeps_working_without_a_handle,
+        ),
         ("application_opens_a_window", application_opens_a_window),
         (
             "system_context_uses_user_config_dir",

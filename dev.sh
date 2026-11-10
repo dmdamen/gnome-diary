@@ -12,7 +12,8 @@
 #   ./dev.sh cargo ...    any cargo command inside the container
 #   ./dev.sh shell        interactive shell in the container
 #   ./dev.sh flatpak      build build/diary.flatpak
-#   ./dev.sh install      install build/diary.flatpak for this user (touches the host)
+#   ./dev.sh install      build and install natively in ~/.local (touches the host)
+#   ./dev.sh install-flatpak  install build/diary.flatpak for this user (touches the host)
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -87,10 +88,20 @@ case ${1:-} in
     ls -l build/diary.flatpak
     ;;
   install)
+    # A native build: the container is Fedora 45 like this machine, so the
+    # binary uses the GTK and libadwaita that are already installed here.
+    in_container -- cargo build --release -p diary
+    install -Dm755 target/release/diary "$HOME/.local/bin/diary"
+    sed "s|^Exec=diary|Exec=$HOME/.local/bin/diary|" data/$APP_ID.desktop \
+      | install -Dm644 /dev/stdin "$HOME/.local/share/applications/$APP_ID.desktop"
+    install -Dm644 data/icons/$APP_ID.svg "$HOME/.local/share/icons/hicolor/scalable/apps/$APP_ID.svg"
+    echo "Installed ~/.local/bin/diary (find \"Diary\" in the app grid)"
+    ;;
+  install-flatpak)
     flatpak install --user -y build/diary.flatpak
     ;;
   *)
-    sed -n '2,16p' "$0"
+    sed -n '2,17p' "$0"
     exit 1
     ;;
 esac
