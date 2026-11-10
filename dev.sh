@@ -96,6 +96,8 @@ case ${1:-} in
     sed "s|^Exec=diary|Exec=$HOME/.local/bin/diary|" data/$APP_ID.desktop \
       | install -Dm644 /dev/stdin "$HOME/.local/share/applications/$APP_ID.desktop"
     install -Dm644 data/icons/$APP_ID.svg "$HOME/.local/share/icons/hicolor/scalable/apps/$APP_ID.svg"
+    # GNOME Shell only rescans icon folders whose timestamp changed.
+    touch "$HOME/.local/share/icons/hicolor" "$HOME/.local/share/icons/hicolor/scalable/apps"
     echo "Installed ~/.local/bin/diary (find \"Diary\" in the app grid)"
     ;;
   install-flatpak)
