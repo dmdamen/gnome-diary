@@ -1,0 +1,15 @@
+[package]
+name = "diary-core"
+description = "Storage, encryption and entry format for Diary (no UI)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+age.workspace = true
+chrono.workspace = true
+secrecy.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

@@ -1,0 +1,23 @@
+# Development image for Diary. Everything needed to build, test and measure
+# coverage lives here, so nothing has to be installed on the host.
+FROM registry.fedoraproject.org/fedora:45
+
+RUN dnf -y install --setopt=install_weak_deps=False \
+      gcc pkgconf-pkg-config git which findutils tar gzip curl \
+      gtk4-devel libadwaita-devel glib2-devel \
+      weston mesa-dri-drivers dbus-daemon \
+      adwaita-icon-theme adwaita-sans-fonts \
+      age rustup \
+    && dnf clean all
+
+# Rust from rustup so llvm-tools matches rustc's LLVM (needed by cargo-llvm-cov).
+ENV RUSTUP_HOME=/opt/rustup CARGO_HOME=/opt/cargo PATH=/opt/cargo/bin:$PATH
+RUN rustup-init -y --no-modify-path --profile minimal \
+      --component clippy,rustfmt,llvm-tools-preview \
+    && curl -fsSL https://github.com/taiki-e/cargo-llvm-cov/releases/latest/download/cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz \
+       | tar xz -C /opt/cargo/bin \
+    && chmod -R a+rwX /opt/rustup /opt/cargo
+
+# The dependency cache lives in a volume; keep it out of CARGO_HOME's binaries.
+ENV CARGO_HOME=/cargo PATH=/opt/cargo/bin:$PATH
+WORKDIR /src

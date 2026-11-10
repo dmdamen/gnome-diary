@@ -1,0 +1,19 @@
+[workspace]
+resolver = "3"
+members = ["crates/diary-core", "crates/diary-app", "crates/diary"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+
+[workspace.dependencies]
+diary-core = { path = "crates/diary-core" }
+diary-app = { path = "crates/diary-app" }
+age = "0.11"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+secrecy = "0.10"
+thiserror = "2"
+tempfile = "3"
+gtk = { package = "gtk4", version = "0.10", features = ["v4_12"] }
+adw = { package = "libadwaita", version = "0.8", features = ["v1_5"] }
