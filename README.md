@@ -13,6 +13,10 @@ A distraction-free, encrypted diary for GNOME.
 - **Nothing in the way.** A clean page of text. The header bar slides away
   while you type and comes back when you move the mouse.
 
+| First start | Writing |
+|---|---|
+| ![The first screen: choose a folder for your diary](docs/screenshot-setup.png) | ![A diary entry for Tuesday 10 November 2026](docs/screenshot-entry.png) |
+
 ## Using it
 
 On first start, Diary asks for a folder and a password.
@@ -79,7 +83,7 @@ Everything runs in podman; nothing needs to be installed on your machine.
 ./dev.sh test          # fmt, clippy, all tests, and the ≥95% line-coverage gate
 ./dev.sh quick [args]  # cargo test without coverage (fast red/green loop)
 ./dev.sh run           # run the app on your desktop (throwaway home folder)
-./dev.sh screenshots   # render the main pages to target/screenshots/
+./dev.sh screenshots   # render the main pages to target/screenshots/ (README images are in docs/)
 ./dev.sh install       # build and install natively in ~/.local
 ./dev.sh flatpak       # optional: build build/diary.flatpak (install with ./dev.sh install-flatpak)
 ```
