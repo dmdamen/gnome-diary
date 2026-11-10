@@ -4,3 +4,5 @@
 pub mod clock;
 pub mod crypto;
 pub mod entry;
+pub mod search;
+pub mod store;
