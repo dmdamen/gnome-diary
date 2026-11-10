@@ -35,6 +35,7 @@ in_container() {
 # Commands run with a headless Wayland compositor, for the GTK tests.
 HEADLESS='
   export XDG_RUNTIME_DIR=$(mktemp -d) WAYLAND_DISPLAY=wayland-test GDK_BACKEND=wayland
+  export XDG_CACHE_HOME=/tmp/cache
   export GSETTINGS_BACKEND=memory GTK_A11Y=none NO_AT_BRIDGE=1 GSK_RENDERER=cairo LIBGL_ALWAYS_SOFTWARE=1
   weston --backend=headless --socket=wayland-test --idle-time=0 >/tmp/weston.log 2>&1 &
   for _ in $(seq 50); do [[ -S $XDG_RUNTIME_DIR/wayland-test ]] && break; sleep 0.1; done

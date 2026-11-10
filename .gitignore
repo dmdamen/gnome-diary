@@ -2,3 +2,4 @@
 /build
 /.flatpak-builder
 /vendor
+/.cache
